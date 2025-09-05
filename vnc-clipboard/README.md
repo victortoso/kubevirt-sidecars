@@ -8,7 +8,7 @@ installed and running in the guest.
 
 ## Step by step
 
-1. Enable Sidecar featureGates
+1. Enable Sidecar in [featureGates][]
 
 2. Add the configmap with the script. The *key* and ConfigMap *name* will be used in the next step.
 
@@ -39,5 +39,6 @@ metadata:
 - Support NoVNC clipboard copy paste feature [#10306][]
 - Add support for Clipboard in VNC [#10971][]
 
+[featureGates]: https://kubevirt.io/user-guide/cluster_admin/activating_feature_gates
 [#10306]: https://github.com/kubevirt/kubevirt/issues/10306
 [#10971]: https://github.com/kubevirt/kubevirt/pull/10971
