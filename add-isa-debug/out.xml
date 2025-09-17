@@ -1,0 +1,135 @@
+<domain xmlns:ns0="http://kubevirt.io" type="kvm">
+	<name>default_vmi-alpine-efi</name>
+	<memory unit="b">1073741824</memory>
+	<maxMemory unit="b" slots="0">4294967296</maxMemory>
+	<os>
+		<type arch="x86_64" machine="q35">hvm</type>
+		<smbios mode="sysinfo" />
+		<loader readonly="yes" secure="no" type="pflash">/usr/share/OVMF/OVMF_CODE.secboot.fd</loader>
+		<nvram template="/usr/share/OVMF/OVMF_VARS.fd">/var/run/kubevirt-private/libvirt/qemu/nvram/vmi-alpine-efi_VARS.fd</nvram>
+	</os>
+	<sysinfo type="smbios">
+		<system>
+			<entry name="uuid">17ff6eee-d293-4ff4-be90-bbd419391cb9</entry>
+			<entry name="manufacturer">KubeVirt</entry>
+			<entry name="family">KubeVirt</entry>
+			<entry name="product">None</entry>
+			<entry name="sku" />
+			<entry name="version" />
+		</system>
+		<bios />
+		<baseBoard />
+		<chassis />
+	</sysinfo>
+	<devices>
+		<emulator>/usr/libexec/qemu-kvm</emulator>
+		<interface type="ethernet">
+			<source />
+			<target dev="tap0" managed="no" />
+			<model type="virtio-non-transitional" />
+			<mac address="76:8d:f1:78:68:e1" />
+			<mtu size="1480" />
+			<alias name="ua-default" />
+			<rom enabled="no" />
+		</interface>
+		<channel type="unix">
+			<target name="org.qemu.guest_agent.0" type="virtio" />
+		</channel>
+		<controller type="usb" index="0" model="none" />
+		<controller type="scsi" index="0" model="virtio-non-transitional">
+			<address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0" />
+		</controller>
+		<controller type="virtio-serial" index="0" model="virtio-non-transitional">
+			<address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0" />
+		</controller>
+		<controller type="sata" index="0">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2" />
+		</controller>
+		<controller type="pci" index="0" model="pcie-root" />
+		<controller type="pci" index="1" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x0" />
+		</controller>
+		<controller type="pci" index="2" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x1" />
+		</controller>
+		<controller type="pci" index="3" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x2" />
+		</controller>
+		<controller type="pci" index="4" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x3" />
+		</controller>
+		<controller type="pci" index="5" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x4" />
+		</controller>
+		<controller type="pci" index="6" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x5" />
+		</controller>
+		<controller type="pci" index="7" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x6" />
+		</controller>
+		<controller type="pci" index="8" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x7" />
+		</controller>
+		<controller type="pci" index="9" model="pcie-root-port">
+			<address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0" />
+		</controller>
+		<video>
+			<model type="bochs" heads="1" vram="16384" />
+		</video>
+		<graphics type="vnc">
+			<listen type="socket" socket="/var/run/kubevirt-private/6c46348d-2553-4993-8b0e-670810031e36/virt-vnc" />
+		</graphics>
+		<memballoon model="virtio-non-transitional" freePageReporting="on">
+			<stats period="10" />
+			<address type="pci" domain="0x0000" bus="0x08" slot="0x00" function="0x0" />
+		</memballoon>
+		<disk device="disk" type="file" model="virtio-non-transitional">
+			<source file="/var/run/kubevirt-ephemeral-disks/disk-data/containerdisk/disk.qcow2" />
+			<target bus="virtio" dev="vda" />
+			<driver cache="none" error_policy="stop" name="qemu" type="qcow2" discard="unmap" />
+			<alias name="ua-containerdisk" />
+			<backingStore type="file">
+				<format type="raw" />
+				<source file="/var/run/kubevirt/container-disks/disk_0.img" />
+			</backingStore>
+			<address type="pci" domain="0x0000" bus="0x07" slot="0x00" function="0x0" />
+		</disk>
+		<input type="mouse" bus="ps2" />
+		<input type="keyboard" bus="ps2" />
+		<serial type="unix">
+			<target port="0" />
+			<source mode="bind" path="/var/run/kubevirt-private/6c46348d-2553-4993-8b0e-670810031e36/virt-serial0" />
+			<log file="/var/run/kubevirt-private/6c46348d-2553-4993-8b0e-670810031e36/virt-serial0-log" append="on" />
+		</serial>
+		<console type="unix">
+			<target type="serial" port="0" />
+			<source mode="bind" path="/var/run/kubevirt-private/6c46348d-2553-4993-8b0e-670810031e36/virt-serial0" />
+		</console>
+		<watchdog model="itco" action="reset" />
+	<serial type="null">
+    <log file="/var/log/libvirt/qemu/fw.log" append="off" />
+    <target type="isa-debug" port="1">
+      <model name="isa-debugcon" />
+    </target>
+    <address type="isa" iobase="0x402" />
+  </serial></devices>
+	<metadata>
+		<ns0:kubevirt>
+			<ns0:uid />
+		</ns0:kubevirt>
+	</metadata>
+	<features>
+		<acpi />
+		<vmport state="off" />
+	</features>
+	<cpu mode="host-model">
+		<topology sockets="4" cores="1" threads="1" />
+	</cpu>
+	<vcpu placement="static">4</vcpu>
+	<vcpus>
+		<vcpu id="0" enabled="yes" hotpluggable="no" />
+		<vcpu id="1" enabled="no" hotpluggable="yes" />
+		<vcpu id="2" enabled="no" hotpluggable="yes" />
+		<vcpu id="3" enabled="no" hotpluggable="yes" />
+	</vcpus>
+</domain>
