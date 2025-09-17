@@ -19,7 +19,7 @@ def add_isa_debug(domainxml):
   null_serial = ET.fromstring(
     f"""
   <serial type='null'>
-    <log file='/var/log/libvirt/qemu/fw.log' append='off'/>
+    <log file='/tmp/fw.log' append='off'/>
     <target type='isa-debug' port='1'>
       <model name='isa-debugcon'/>
     </target>
