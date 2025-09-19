@@ -20,13 +20,23 @@ def add_isa_debug(domainxml):
     f"""
   <serial type='null'>
     <log file='/tmp/fw.log' append='off'/>
-    <target type='isa-debug' port='1'>
+    <target type='isa-debug' port='2'>
       <model name='isa-debugcon'/>
     </target>
     <address type='isa' iobase='0x402'/>
   </serial>""")
 
+  pty_serial = ET.fromstring(
+    f"""
+  <serial type='pty'>
+    <log file='/tmp/serial.log' append='off'/>
+    <target type='isa-serial' port='1'>
+      <model name='isa-serial'/>
+    </target>
+  </serial>""")
+
   devices.insert(len(devices), null_serial)
+  devices.insert(len(devices), pty_serial)
   ET.dump(root)
 
 if __name__ == "__main__":
