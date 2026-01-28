@@ -1,0 +1,39 @@
+# Build qemu-display: the RDP and VNC server
+# We use centos stream 9 for compatibility with virt-launcher's build
+from quay.io/centos/centos:stream9 as builder
+
+arg deps="git rust cargo gcc cmake usbredir usbredir-devel wayland-devel \
+    libxkbcommon-devel glib2-devel gtk4-devel gstreamer1-devel \
+    gstreamer1-plugins-base-devel opus opus-devel"
+
+arg qemu_display_repo="https://gitlab.com/marcandre.lureau/qemu-display.git"
+
+workdir /src
+
+run dnf config-manager --set-enabled crb && \
+    dnf install -y ${deps} && \
+	git clone ${qemu_display_repo} && \
+	cd qemu-display && \
+	git submodule update --init --recursive && \
+	cargo build -p qemu-vnc -p qemu-rdp
+
+# Get sidecar-shim binary to handle gRPC hook sidecar API
+from quay.io/kubevirt/sidecar-shim:v1.3.0 as shim
+
+from quay.io/centos/centos:stream9
+
+# I think just procps is not needed but useful.
+arg rtdeps="usbredir dbus dbus-daemon procps-ng python3 opus"
+arg builder_path="/src/qemu-display/target/debug/"
+
+copy --from=builder ${builder_path}/qemu-rdp ${builder_path}/qemu-vnc /usr/bin/
+copy --from=shim /sidecar-shim /usr/bin
+
+copy ./data /data
+copy ./scripts /scripts
+
+run dnf install -y ${rtdeps} && \
+    chown 107:107 /data/*.pem && \
+    mv /scripts/onDefineDomain.py /usr/bin/onDefineDomain
+
+entrypoint ["/scripts/entrypoint.sh"]

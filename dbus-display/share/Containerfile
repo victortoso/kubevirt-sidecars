@@ -1,0 +1,2 @@
+from localhost:46117/kubevirt/virt-launcher:devel
+copy ./lib64/qemu-kvm/* /usr/lib64/qemu-kvm/

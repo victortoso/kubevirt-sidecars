@@ -1,0 +1,10 @@
+from localhost/kubevirt/virt-launcher:devel
+
+# Extracted from c9s x86_64 package
+copy ./bins/* /usr/bin/
+copy ./pkgs /pkgs
+run for i in /pkgs/*.rpm; \
+    do \
+        rpm2cpio $i | cpio -idmv; \
+    done; \
+    rm -rf /pkgs
